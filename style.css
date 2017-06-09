@@ -1,0 +1,245 @@
+#root {
+	width:95%;
+	margin:0 auto;
+	max-width: 1210px;
+}
+.calendar {
+	width: 100%;
+	height: 100%;
+	max-width: 1210px;
+}
+.inner {
+	margin-top: 20px;
+	margin-bottom: 40px;
+}
+
+.prev {
+	display:inline-block;
+	border: 1px solid black;
+	padding: 4px 25px;
+	border-radius: 3px 0 0 3px;
+}
+.prev:hover, .next:hover {
+	background-color: rgba(91, 192, 222, 0.4);
+	
+}
+
+.next {
+	display:inline-block;
+	border: 1px solid black;
+	padding: 4px 25px;
+	border-left: none;
+	border-radius: 0 3px 3px 0;
+}
+
+.title {
+    margin: 20px auto;
+    width: 120px;
+    margin-top: -25px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.cells{
+	display: inline-block;
+	width:100%;
+	height: 100px;
+
+	color: #333;
+}
+.empty {
+	
+	width: 13%;
+	height: 100px;
+	position: relative;
+	display: inline-block;	
+}
+
+
+.day-cell {
+	display: inline-block;
+	width:14.2%;
+	border:1px solid grey;
+	text-align: center;
+	font-weight: bold;
+	padding-top: 5px;
+	padding-bottom: 5px;
+
+}
+
+
+.modal-container {
+  	position: relative;
+	height: 100px;
+	width: 14.2%;
+	display: inline;
+}
+.modal-container .modal, .modal-container .modal-backdrop {
+  	position: absolute;
+}
+.modal-container .btn {
+	height: 100%;
+	width:14.2%;
+	padding:0;
+	border-radius: 0px;
+
+}
+.btn-info {
+	background-color: rgba(91, 192, 222, 0.4);
+
+}
+.btn-info:hover {
+	background-color: rgba(91, 192, 222, 0.6)
+}
+.btn-info.active:focus {
+	background-color: rgba(91, 192, 222, 0.6)
+}
+
+
+
+.modal-dialog {
+	max-width:950px;
+	width:95%;
+	margin-bottom: 0;
+}
+.modal-backdrop {
+	background-color: rgb(0,0,0);
+}
+.modal-content {
+	box-shadow: none;
+	border: none;
+}
+.day {margin-bottom: 5px;}
+
+.eventEvent {
+	color:white;
+	border-radius: 7px;
+	overflow: hidden;
+
+}
+.event {
+	background: blue;
+}
+.event-underline {
+	border-bottom: 2px solid blue;
+	display:inline-block;
+}
+.deadline {
+	background: red;
+
+}
+.deadline-underline {
+	border-bottom: 2px solid red;
+	display:inline-block;
+}
+
+.webinar {
+	background: green;
+
+}
+.webinar-underline {
+	border-bottom: 2px solid green;
+	display:inline-block;
+}
+
+.lecture {
+	background: #5c5b5b;
+
+}
+.lecture-underline {
+	border-bottom: 2px solid #5c5b5b;
+	display:inline-block;
+}
+
+.workshop {
+	background: orange;
+
+}
+.workshop-underline {
+	border-bottom: 2px solid orange;
+	display:inline-block;
+}
+
+.trainers {
+	display: inline-block;
+	margin-right: 20px;
+}
+
+.modal-body li {    list-style-type: none;}
+.modal-body ul {
+	padding-left: 0;
+}
+.modal-body {
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+.modal-title {
+	padding-left: 30px;
+	font-weight: bold;
+	color:white;
+
+}
+.modal-body .resource-type{
+	font-size: 18px;
+
+}
+.modal-footer .btn {
+	color:white;
+	padding-top:5px;
+	padding-bottom:5px;
+}
+.modal-footer .btn:hover {
+	color:#000;
+}
+.close {
+	color: white;
+	text-shadow: none;
+	opacity: 1;
+}
+.message {
+	padding-left: 150px;
+}
+
+.loadingIndicator {
+	margin:50px auto;
+	display: block;
+
+
+}
+
+@media (max-width: 700px) {
+.cells {
+	height: 80px;
+}	
+.event {
+	color: blue;
+	height: 25px;
+}
+.deadline {
+	color: red;
+	height: 25px;
+
+}
+.webinar {
+	color: green;
+	height: 25px;
+}
+
+.lecture {
+	color: #5c5b5b;
+	height: 25px;
+}
+.workshop {
+	color: orange;
+	height: 25px;
+}
+
+}
+@media (max-width: 500px) {
+
+	.title{
+		margin-left: 60%;
+
+	}
+}
