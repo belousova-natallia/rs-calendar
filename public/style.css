@@ -44,9 +44,9 @@
 	display: inline-block;
 	width:100%;
 	height: 100px;
-
 	color: #333;
 }
+
 .empty {
 	
 	width: 13%;
@@ -84,12 +84,14 @@
 	border-radius: 0px;
 
 }
+
 .btn-info {
 	background-color: rgba(91, 192, 222, 0.4);
 
 }
 .btn-info:hover {
-	background-color: rgba(91, 192, 222, 0.6)
+	background-color: rgba(91, 192, 222, 0.5);
+	box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 .btn-info.active:focus {
 	background-color: rgba(91, 192, 222, 0.6)
@@ -109,16 +111,26 @@
 	box-shadow: none;
 	border: none;
 }
-.day {margin-bottom: 5px;}
+.day {
+	margin-bottom: 5px;
+	font-size: 19px;
+	}
 
+.eventEvent .day {
+	color:#fff;
+}
 .eventEvent {
 	color:white;
 	border-radius: 7px;
 	overflow: hidden;
+	height: 40px;
 
 }
+.day + div {
+	color:white;
+}
 .event {
-	background: blue;
+	background: #1b65d7;
 }
 .event-underline {
 	border-bottom: 2px solid blue;
@@ -152,13 +164,36 @@
 }
 
 .workshop {
-	background: orange;
+	background: #ff9500;
 
 }
 .workshop-underline {
-	border-bottom: 2px solid orange;
+	border-bottom: 2px solid #ff9500;
 	display:inline-block;
 }
+
+
+button.deadline:hover, button.deadline:active, button.deadline:focus  {
+	background: #cf0404;
+
+}
+
+button.webinar:hover, button.webinar:active, button.webinar:focus {
+	background: darkgreen;
+}
+
+button.lecture:hover, button.lecture:active, button.lecture:focus {
+	background: #3f3e3e;
+} 
+
+button.workshop:hover, button.workshop:active, button.workshop:focus {
+	background: #e48705;
+} 
+
+button.event:hover, button.event:active, button.event:focus  {
+	background: #124ca6;
+}
+
 
 .trainers {
 	display: inline-block;
@@ -210,30 +245,12 @@
 
 @media (max-width: 700px) {
 .cells {
-	height: 80px;
+	height: 70px;
+}
+.eventEvent {
+	font-size: 0px;
+	height:20px;
 }	
-.event {
-	color: blue;
-	height: 25px;
-}
-.deadline {
-	color: red;
-	height: 25px;
-
-}
-.webinar {
-	color: green;
-	height: 25px;
-}
-
-.lecture {
-	color: #5c5b5b;
-	height: 25px;
-}
-.workshop {
-	color: orange;
-	height: 25px;
-}
 
 }
 @media (max-width: 500px) {

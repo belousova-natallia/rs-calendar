@@ -26,6 +26,52 @@ class Calendar extends React.Component{
         
     };
 
+    touchEvent(){
+let that = this;
+let calendar = document.getElementById("root");
+
+calendar.addEventListener('touchstart', handleTouchStart, false);        
+calendar.addEventListener('touchmove', handleTouchMove, false);
+
+let xDown = null;                                                        
+let yDown = null;                                                        
+
+function handleTouchStart(evt) {                                         
+    xDown = evt.touches[0].clientX;                                      
+    yDown = evt.touches[0].clientY;                                        
+};                                                
+
+function handleTouchMove(evt) {
+    if ( ! xDown || ! yDown ) {
+        return;
+    }
+    let xUp = evt.touches[0].clientX;                                    
+    let yUp = evt.touches[0].clientY;
+    
+
+    let xDiff = xDown - xUp;
+    let yDiff = yDown - yUp;
+
+
+    if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
+        if ( xDiff > 0 ) {
+          that.getNext()   
+  }
+     else {
+         that.getPrev()   
+        
+}
+        }                       
+     
+    /* reset values */
+    xDown = null;
+    yDown = null; 
+
+                                          
+};}
+
+
+
     getPrev() {
         let state = {};
         if (this.state.month > 0) {
@@ -112,6 +158,7 @@ class Calendar extends React.Component{
     componentDidMount() {
 this.getEvents();
 this.getTrainers();
+this.touchEvent();
 }
     componentDidUpdate(prevProps, prevState) {
        if (this.props.onSelect && prevState.selectedDt !== this.state.selectedDt) {
@@ -284,7 +331,7 @@ class MonthDates extends React.Component{
  <div className="cells" key={item} >
         <div className="day">{item}</div>
 
-         <br/>
+      
        <div className={`eventEvent ${(eventt) ? eventt.type : ""}`}> {(eventt) ? `${eventt.type}:`  : "" }
        <br/>
        {(eventt) ? eventt.title  : "" }
@@ -307,7 +354,7 @@ class MonthDates extends React.Component{
 
             return <div className="modal-container" key={item} >
          
-        <Button
+        <Button className={(eventt) ? `${eventt.type} eventEvent` : ""}
           bsStyle="info"
           bsSize="large"
           onClick={function(){
@@ -320,7 +367,7 @@ class MonthDates extends React.Component{
           <div className="cells" key={item} onClick={that.props.onSelect.bind(that, that.props.year, that.props.month, item)}>
           <div className="day">{(item < 10) ? '0' + item : item}</div>
           
-       <div className={`eventEvent ${(eventt) ? eventt.type : ""}`}> {(eventt) ? `${eventt.type}:`  : "" }
+       <div > {(eventt) ? `${eventt.type}:`  : "" }
        <br/>
        {(eventt) ? eventt.title  : "" }
        </div>
@@ -366,7 +413,7 @@ class MonthDates extends React.Component{
     >
  <div className="cells" key={item} >
         <div className="day">{item}</div>
- <br/>
+
         <div className={`eventEvent ${(eventt) ? eventt.type : ""}`}> {(eventt) ? `${eventt.type}:`  : "" }
        <br/>
        {(eventt) ? eventt.title  : "" }

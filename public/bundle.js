@@ -18741,6 +18741,47 @@ var Calendar = function (_React$Component) {
             };
         }
     }, {
+        key: 'touchEvent',
+        value: function touchEvent() {
+            var that = this;
+            var calendar = document.getElementById("root");
+
+            calendar.addEventListener('touchstart', handleTouchStart, false);
+            calendar.addEventListener('touchmove', handleTouchMove, false);
+
+            var xDown = null;
+            var yDown = null;
+
+            function handleTouchStart(evt) {
+                xDown = evt.touches[0].clientX;
+                yDown = evt.touches[0].clientY;
+            };
+
+            function handleTouchMove(evt) {
+                if (!xDown || !yDown) {
+                    return;
+                }
+                var xUp = evt.touches[0].clientX;
+                var yUp = evt.touches[0].clientY;
+
+                var xDiff = xDown - xUp;
+                var yDiff = yDown - yUp;
+
+                if (Math.abs(xDiff) > Math.abs(yDiff)) {
+                    /*most significant*/
+                    if (xDiff > 0) {
+                        that.getNext();
+                    } else {
+                        that.getPrev();
+                    }
+                }
+
+                /* reset values */
+                xDown = null;
+                yDown = null;
+            };
+        }
+    }, {
         key: 'getPrev',
         value: function getPrev() {
             var state = {};
@@ -18818,6 +18859,7 @@ var Calendar = function (_React$Component) {
         value: function componentDidMount() {
             this.getEvents();
             this.getTrainers();
+            this.touchEvent();
         }
     }, {
         key: 'componentDidUpdate',
@@ -19084,7 +19126,6 @@ var MonthDates = function (_React$Component4) {
                                     { className: 'day' },
                                     item
                                 ),
-                                _react2.default.createElement('br', null),
                                 _react2.default.createElement(
                                     'div',
                                     { className: 'eventEvent ' + (eventt ? eventt.type : "") },
@@ -19110,7 +19151,7 @@ var MonthDates = function (_React$Component4) {
                         { className: 'modal-container', key: item },
                         _react2.default.createElement(
                             _reactBootstrap.Button,
-                            {
+                            { className: eventt ? eventt.type + ' eventEvent' : "",
                                 bsStyle: 'info',
                                 bsSize: 'large',
                                 onClick: function onClick() {
@@ -19130,7 +19171,7 @@ var MonthDates = function (_React$Component4) {
                                 ),
                                 _react2.default.createElement(
                                     'div',
-                                    { className: 'eventEvent ' + (eventt ? eventt.type : "") },
+                                    null,
                                     ' ',
                                     eventt ? eventt.type + ':' : "",
                                     _react2.default.createElement('br', null),
@@ -19184,7 +19225,6 @@ var MonthDates = function (_React$Component4) {
                                     { className: 'day' },
                                     item
                                 ),
-                                _react2.default.createElement('br', null),
                                 _react2.default.createElement(
                                     'div',
                                     { className: 'eventEvent ' + (eventt ? eventt.type : "") },
