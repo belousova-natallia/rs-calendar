@@ -18882,6 +18882,7 @@ var Calendar = function (_React$Component) {
             currentEvent: null,
             year: date.getFullYear(),
             month: date.getMonth(),
+            date: date.getDate(),
             selectedYear: null,
             selectedMonth: null,
             selectedDate: null,
@@ -18918,7 +18919,7 @@ var Calendar = function (_React$Component) {
                     { className: 'inner' },
                     _react2.default.createElement(Header, { monthNames: this.state.monthNamesFull, month: this.state.month, year: this.state.year, onPrev: this.getPrev, onNext: this.getNext }),
                     _react2.default.createElement(WeekDays, { dayNames: this.state.dayNames, startDay: this.state.startDay, weekNumbers: this.state.weekNumbers }),
-                    _react2.default.createElement(MonthDates, { month: this.state.month, year: this.state.year, daysInMonth: this.state.daysInMonth,
+                    _react2.default.createElement(MonthDates, { month: this.state.month, year: this.state.year, date: this.state.date, daysInMonth: this.state.daysInMonth,
                         firstOfMonth: this.state.firstOfMonth, lastOfMonth: this.state.lastOfMonth, daysInPrevMonth: this.state.daysInPrevMonth, startDay: this.state.startDay, onSelect: this.selectDate,
                         weekNumbers: this.state.weekNumbers, disablePast: this.state.disablePast, minDate: this.state.minDate,
                         selectedDt: this.state.selectedDt, selectedYear: this.state.selectedYear, selectedMonth: this.state.selectedMonth,
@@ -19102,65 +19103,81 @@ var MonthDates = function (_React$Component4) {
 
                     var thisDate = year + '-' + month + '-' + item;
 
-                    var eventt = that.props.events.find(function (event) {
-                        return event.start.slice(0, 10) === thisDate;
+                    var eventtArr = [];
+                    that.props.events.forEach(function (event) {
+                        if (event.start.slice(0, 10) === thisDate) {
+                            eventtArr.push(event);
+                        }
                     });
 
                     return _react2.default.createElement(
                         'div',
                         { className: 'modal-container', key: item },
-                        _react2.default.createElement(
+                        eventtArr.length === 0 ? _react2.default.createElement(
                             _reactBootstrap.Button,
-                            { className: 'cells empty', key: item,
-                                onClick: function onClick() {
-                                    if (eventt) {
-                                        that.setState({ show: true, event: eventt });
-                                        that.getTrainer(eventt.speakers);
-                                    }
-                                } },
+                            { className: 'cells', key: item },
+                            ' ',
                             _react2.default.createElement(
                                 'div',
-                                { className: 'cells', key: item },
+                                { className: 'cells empty', key: item, onClick: that.props.onSelect.bind(that, that.props.year, that.props.month, item) },
                                 _react2.default.createElement(
                                     'div',
                                     { className: 'day' },
-                                    item
-                                ),
-                                _react2.default.createElement(
-                                    'div',
-                                    { className: 'eventEvent ' + (eventt ? eventt.type : "") },
-                                    ' ',
-                                    eventt ? eventt.type + ':' : "",
-                                    _react2.default.createElement('br', null),
-                                    eventt ? eventt.title : ""
+                                    item < 10 ? '0' + item : item
                                 )
                             )
-                        )
+                        ) : eventtArr.map(function (eventt, i) {
+                            return _react2.default.createElement(
+                                _reactBootstrap.Button,
+                                { key: i, style: { height: 100 / eventtArr.length + '%' }, className: eventt ? eventt.type + ' eventEvent empty' : "empty",
+                                    bsStyle: 'info',
+                                    bsSize: 'large',
+                                    onClick: function onClick() {
+                                        if (eventt) {
+                                            that.setState({ show: true, event: eventt });
+                                            that.getTrainer(eventt.speakers);
+                                        }
+                                    }
+                                },
+                                _react2.default.createElement(
+                                    'div',
+                                    { className: 'cells', key: item, onClick: that.props.onSelect.bind(that, that.props.year, that.props.month, item) },
+                                    _react2.default.createElement(
+                                        'div',
+                                        { className: 'day' },
+                                        i < 1 ? item < 10 ? '0' + item : item : ""
+                                    ),
+                                    _react2.default.createElement(
+                                        'div',
+                                        null,
+                                        ' ',
+                                        eventt ? eventt.type : "",
+                                        _react2.default.createElement('br', null)
+                                    )
+                                )
+                            );
+                        })
                     );
                 }),
                 arr.map(function (item) {
 
                     var thisDate = that.props.year + '-' + (that.props.month < 9 ? '0' + (that.props.month + 1) : that.props.month + 1) + '-' + (item < 10 ? '0' + item : item);
 
-                    var eventt = that.props.events.find(function (event) {
-                        return event.start.slice(0, 10) === thisDate;
+                    var eventtArr = [];
+                    that.props.events.forEach(function (event) {
+                        if (event.start.slice(0, 10) === thisDate) {
+                            eventtArr.push(event);
+                        }
                     });
 
                     return _react2.default.createElement(
                         'div',
                         { className: 'modal-container', key: item },
-                        _react2.default.createElement(
+                        eventtArr.length === 0 ? _react2.default.createElement(
                             _reactBootstrap.Button,
-                            { className: eventt ? eventt.type + ' eventEvent' : "",
-                                bsStyle: 'info',
-                                bsSize: 'large',
-                                onClick: function onClick() {
-                                    if (eventt) {
-                                        that.setState({ show: true, event: eventt });
-                                        that.getTrainer(eventt.speakers);
-                                    }
-                                }
-                            },
+                            { bsStyle: 'info',
+                                bsSize: 'large', key: item, className: item === that.props.date && thisDate.slice(0, 4) == new Date().getFullYear() && thisDate.slice(5, 7) == new Date().getMonth() + 1 ? "today" : "" },
+                            ' ',
                             _react2.default.createElement(
                                 'div',
                                 { className: 'cells', key: item, onClick: that.props.onSelect.bind(that, that.props.year, that.props.month, item) },
@@ -19168,17 +19185,39 @@ var MonthDates = function (_React$Component4) {
                                     'div',
                                     { className: 'day' },
                                     item < 10 ? '0' + item : item
-                                ),
-                                _react2.default.createElement(
-                                    'div',
-                                    null,
-                                    ' ',
-                                    eventt ? eventt.type + ':' : "",
-                                    _react2.default.createElement('br', null),
-                                    eventt ? eventt.title : ""
                                 )
                             )
-                        )
+                        ) : eventtArr.map(function (eventt, i) {
+                            return _react2.default.createElement(
+                                _reactBootstrap.Button,
+                                { key: i, style: { height: 100 / eventtArr.length + '%' }, className: eventt.type + ' eventEvent \n                  ' + (item === that.props.date && thisDate.slice(0, 4) == new Date().getFullYear() && thisDate.slice(5, 7) == new Date().getMonth() + 1 ? "today" : ""),
+                                    bsStyle: 'info',
+                                    bsSize: 'large',
+                                    onClick: function onClick() {
+                                        if (eventt) {
+                                            that.setState({ show: true, event: eventt });
+                                            that.getTrainer(eventt.speakers);
+                                        }
+                                    }
+                                },
+                                _react2.default.createElement(
+                                    'div',
+                                    { className: 'cells', key: item, onClick: that.props.onSelect.bind(that, that.props.year, that.props.month, item) },
+                                    _react2.default.createElement(
+                                        'div',
+                                        { className: 'day' },
+                                        i < 1 ? item < 10 ? '0' + item : item : ""
+                                    ),
+                                    _react2.default.createElement(
+                                        'div',
+                                        null,
+                                        ' ',
+                                        eventt ? eventt.type : "",
+                                        _react2.default.createElement('br', null)
+                                    )
+                                )
+                            );
+                        })
                     );
                 }),
                 arrNextMonth.map(function (item) {
@@ -19200,41 +19239,60 @@ var MonthDates = function (_React$Component4) {
 
                     var thisDate = year + '-' + month + '-' + item;
 
-                    var eventt = that.props.events.find(function (event) {
-                        return event.start.slice(0, 10) === thisDate;
+                    var eventtArr = [];
+                    that.props.events.forEach(function (event) {
+                        if (event.start.slice(0, 10) === thisDate) {
+                            eventtArr.push(event);
+                        }
                     });
 
                     return _react2.default.createElement(
                         'div',
                         { className: 'modal-container', key: item },
-                        _react2.default.createElement(
+                        eventtArr.length === 0 ? _react2.default.createElement(
                             _reactBootstrap.Button,
-                            { className: 'cells empty', key: item,
-                                onClick: function onClick() {
-                                    if (eventt) {
-                                        that.setState({ show: true, event: eventt, trainersForEventId: eventt.speakers });
-                                        that.getTrainer(eventt.speakers);
-                                    }
-                                }
-                            },
+                            { className: 'cells', key: item },
+                            ' ',
                             _react2.default.createElement(
                                 'div',
-                                { className: 'cells', key: item },
+                                { className: 'cells empty', key: item, onClick: that.props.onSelect.bind(that, that.props.year, that.props.month, item) },
                                 _react2.default.createElement(
                                     'div',
                                     { className: 'day' },
                                     item
-                                ),
-                                _react2.default.createElement(
-                                    'div',
-                                    { className: 'eventEvent ' + (eventt ? eventt.type : "") },
-                                    ' ',
-                                    eventt ? eventt.type + ':' : "",
-                                    _react2.default.createElement('br', null),
-                                    eventt ? eventt.title : ""
                                 )
                             )
-                        )
+                        ) : eventtArr.map(function (eventt, i) {
+                            return _react2.default.createElement(
+                                _reactBootstrap.Button,
+                                { key: i, style: { height: 100 / eventtArr.length + '%' }, className: eventt ? eventt.type + ' eventEvent empty' : "empty",
+                                    bsStyle: 'info',
+                                    bsSize: 'large',
+                                    onClick: function onClick() {
+                                        if (eventt) {
+                                            that.setState({ show: true, event: eventt });
+                                            that.getTrainer(eventt.speakers);
+                                        }
+                                    }
+                                },
+                                _react2.default.createElement(
+                                    'div',
+                                    { className: 'cells', key: item, onClick: that.props.onSelect.bind(that, that.props.year, that.props.month, item) },
+                                    _react2.default.createElement(
+                                        'div',
+                                        { className: 'day' },
+                                        i < 1 ? item : ""
+                                    ),
+                                    _react2.default.createElement(
+                                        'div',
+                                        null,
+                                        ' ',
+                                        eventt ? eventt.type : "",
+                                        _react2.default.createElement('br', null)
+                                    )
+                                )
+                            );
+                        })
                     );
                 }),
                 _react2.default.createElement(

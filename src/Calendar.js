@@ -175,6 +175,7 @@ this.touchEvent();
             currentEvent: null,
             year: date.getFullYear(),
             month: date.getMonth(),
+            date: date.getDate(),
             selectedYear: null,
             selectedMonth: null,
             selectedDate: null,
@@ -205,7 +206,7 @@ this.touchEvent();
                 <div className="inner">
                     <Header monthNames={this.state.monthNamesFull} month={this.state.month} year={this.state.year} onPrev={this.getPrev} onNext={this.getNext} />
                     <WeekDays dayNames={this.state.dayNames} startDay={this.state.startDay} weekNumbers={this.state.weekNumbers} />
-                    <MonthDates month={this.state.month} year={this.state.year} daysInMonth={this.state.daysInMonth}
+                    <MonthDates month={this.state.month} year={this.state.year} date={this.state.date} daysInMonth={this.state.daysInMonth}
                      firstOfMonth={this.state.firstOfMonth} lastOfMonth={this.state.lastOfMonth}  daysInPrevMonth={this.state.daysInPrevMonth} startDay={this.state.startDay} onSelect={this.selectDate}
                       weekNumbers={this.state.weekNumbers} disablePast={this.state.disablePast} minDate={this.state.minDate} 
                       selectedDt={this.state.selectedDt} selectedYear={this.state.selectedYear} selectedMonth={this.state.selectedMonth}
@@ -315,46 +316,21 @@ class MonthDates extends React.Component{
 
             let thisDate = `${year}-${month}-${item}`;
 
-            let eventt = that.props.events.find(function(event){
-            return event.start.slice(0, 10) === thisDate})
+            let eventtArr = [];
+             that.props.events.forEach(function(event){ 
+                if(event.start.slice(0, 10) === thisDate){
+                eventtArr.push(event)
+             }}  )
 
             
             return <div className="modal-container" key={item} >
 
-            <Button className="cells empty" key={item}
-             onClick={function(){
-            if(eventt){
-                that.setState({ show: true, event: eventt});
-                that.getTrainer(eventt.speakers) 
-            }
-        }}>
- <div className="cells" key={item} >
-        <div className="day">{item}</div>
-
-      
-       <div className={`eventEvent ${(eventt) ? eventt.type : ""}`}> {(eventt) ? `${eventt.type}:`  : "" }
-       <br/>
-       {(eventt) ? eventt.title  : "" }
-       </div>
-</div>
-        </Button> 
-
-         </div>
-            })}
-      
-        {arr.map(function(item) {
-
-
-            let thisDate = `${that.props.year}-${(that.props.month < 9) ?
-             '0'+ (that.props.month + 1) : that.props.month + 1}-${(item < 10) ? '0' + item : item}`;
-        
-            let eventt = that.props.events.find(function(event){
-            return event.start.slice(0, 10) === thisDate;
-                })
-
-            return <div className="modal-container" key={item} >
-         
-        <Button className={(eventt) ? `${eventt.type} eventEvent` : ""}
+            {(eventtArr.length === 0)? <Button className="cells" key={item}> <div className='cells empty' key={item} onClick={that.props.onSelect.bind(that, that.props.year, that.props.month, item)}>
+          <div className="day">{(item < 10) ? '0' + item : item}</div>
+                   
+         </div></Button>
+         : eventtArr.map(function(eventt, i){
+                  return <Button key={i} style={{height: `${100/eventtArr.length}%` }} className={(eventt) ? `${eventt.type} eventEvent empty` : "empty"}
           bsStyle="info"
           bsSize="large"
           onClick={function(){
@@ -365,15 +341,76 @@ class MonthDates extends React.Component{
         }}
         >
           <div className="cells" key={item} onClick={that.props.onSelect.bind(that, that.props.year, that.props.month, item)}>
-          <div className="day">{(item < 10) ? '0' + item : item}</div>
+          <div className="day">{i<1 ? ((item < 10) ? '0' + item : item) : ""}</div>
           
-       <div > {(eventt) ? `${eventt.type}:`  : "" }
+       <div > {(eventt) ? eventt.type  : "" }
        <br/>
-       {(eventt) ? eventt.title  : "" }
+       
        </div>
           
          </div>
-        </Button>
+        </Button> 
+         })
+
+     }
+
+      </div>
+
+            })}
+      
+        {arr.map(function(item) {
+
+
+            let thisDate = `${that.props.year}-${(that.props.month < 9) ?
+             '0'+ (that.props.month + 1) : that.props.month + 1}-${(item < 10) ? '0' + item : item}`;
+
+             let eventtArr = [];
+             that.props.events.forEach(function(event){ 
+                if(event.start.slice(0, 10) === thisDate){
+                eventtArr.push(event)
+             }}  )
+        
+            
+
+            return <div className="modal-container" key={item} >
+
+            {(eventtArr.length === 0)? <Button bsStyle="info"
+          bsSize="large" key={item} className={(item === that.props.date && thisDate.slice(0, 4) == new Date().getFullYear() && thisDate.slice(5, 7) == new Date().getMonth() + 1)
+           ? "today" : ""}> <div className="cells" key={item} onClick={that.props.onSelect.bind(that, that.props.year, that.props.month, item)}>
+          <div className="day">{(item < 10) ? '0' + item : item}</div>
+                   
+         </div></Button>
+         : eventtArr.map(function(eventt, i){
+                  return <Button key={i} style={{height: `${100/eventtArr.length}%` }} className={`${eventt.type} eventEvent 
+                  ${(item === that.props.date && thisDate.slice(0, 4) == new Date().getFullYear() && thisDate.slice(5, 7) == new Date().getMonth() + 1)
+           ? "today" : ""}`}
+          bsStyle="info"
+          bsSize="large"
+          onClick={function(){
+            if(eventt){
+                that.setState({ show: true, event: eventt});
+                that.getTrainer(eventt.speakers);
+            }
+        }}
+        >
+          <div className="cells"  key={item} onClick={that.props.onSelect.bind(that, that.props.year, that.props.month, item)}>
+          <div className="day">{i<1 ? ((item < 10) ? '0' + item : item) : ""}</div>
+          
+       <div > {(eventt) ? eventt.type  : "" }
+       <br/>
+       
+       </div>
+          
+         </div>
+        </Button> 
+         })
+
+     }
+
+
+         
+
+
 
       </div>
 
@@ -398,32 +435,46 @@ class MonthDates extends React.Component{
 
             let thisDate = `${year}-${month}-${item}`;
 
-            let eventt = that.props.events.find(function(event){
-            return event.start.slice(0, 10) === thisDate})
             
-    return <div className="modal-container" key={item} >
+            let eventtArr = [];
+             that.props.events.forEach(function(event){ 
+                if(event.start.slice(0, 10) === thisDate){
+                eventtArr.push(event)
+             }}  )
 
-    <Button className="cells empty" key={item}
-       onClick={function(){
+            
+            return <div className="modal-container" key={item} >
+
+            {(eventtArr.length === 0)? <Button className="cells" key={item}> <div className='cells empty' key={item} onClick={that.props.onSelect.bind(that, that.props.year, that.props.month, item)}>
+          <div className="day">{item}</div>
+                   
+         </div></Button>
+         : eventtArr.map(function(eventt, i){
+                  return <Button key={i} style={{height: `${100/eventtArr.length}%` }} className={(eventt) ? `${eventt.type} eventEvent empty` : "empty"}
+          bsStyle="info"
+          bsSize="large"
+          onClick={function(){
             if(eventt){
-                that.setState({ show: true, event: eventt, trainersForEventId: eventt.speakers});
+                that.setState({ show: true, event: eventt});
                 that.getTrainer(eventt.speakers);
             }
         }}
-    >
- <div className="cells" key={item} >
-        <div className="day">{item}</div>
-
-        <div className={`eventEvent ${(eventt) ? eventt.type : ""}`}> {(eventt) ? `${eventt.type}:`  : "" }
+        >
+          <div className="cells" key={item} onClick={that.props.onSelect.bind(that, that.props.year, that.props.month, item)}>
+          <div className="day">{i<1 ? item : ""}</div>
+          
+       <div > {(eventt) ? eventt.type  : "" }
        <br/>
-       {(eventt) ? eventt.title  : "" }
+       
        </div>
- </div>        
+          
+         </div>
         </Button> 
-        
-      
+         })
 
-        </div>
+     }
+
+      </div>
 
 })}
 
